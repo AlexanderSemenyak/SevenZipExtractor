@@ -120,7 +120,7 @@ namespace SevenZipExtractor
 
                     string directoryName = Path.GetDirectoryName(outputPath);
 
-                    if (!string.IsNullOrWhiteSpace(directoryName))
+                    if (!string.IsNullOrEmpty(directoryName))
                     {
                         Directory.CreateDirectory(directoryName);
                     }
@@ -248,7 +248,7 @@ namespace SevenZipExtractor
 
         private void InitializeAndValidateLibrary()
         {
-            if (string.IsNullOrWhiteSpace(this.libraryFilePath))
+            if (string.IsNullOrEmpty(this.libraryFilePath?.Trim()))
             {
                 string currentArchitecture = IntPtr.Size == 4 ? "x86" : "x64"; // magic check
 
@@ -256,21 +256,21 @@ namespace SevenZipExtractor
                 {
                     this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + currentArchitecture + ".dll");
                 }
-                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + currentArchitecture + ".dll")))
+                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.Combine("bin", "7z-" + currentArchitecture + ".dll"))))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + currentArchitecture + ".dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.Combine("bin", "7z-" + currentArchitecture + ".dll"));
                 }
-                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, currentArchitecture, "7z.dll")))
+                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.Combine(currentArchitecture, "7z.dll"))))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, currentArchitecture, "7z.dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.Combine(currentArchitecture, "7z.dll"));
                 }
-                else if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "7-Zip", "7z.dll")))
+                else if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), Path.Combine("7-Zip", "7z.dll"))))
                 {
-                    this.libraryFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "7-Zip", "7z.dll");
+                    this.libraryFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), Path.Combine("7-Zip", "7z.dll"));
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(this.libraryFilePath))
+            if (string.IsNullOrEmpty(this.libraryFilePath.Trim()))
             {
                 throw new SevenZipException("libraryFilePath not set");
             }
@@ -292,7 +292,8 @@ namespace SevenZipExtractor
 
         private bool GuessFormatFromExtension(string fileExtension, out SevenZipFormat format)
         {
-            if (string.IsNullOrWhiteSpace(fileExtension))
+            fileExtension = fileExtension.Trim();
+            if (string.IsNullOrEmpty(fileExtension))
             {
                 format = SevenZipFormat.Undefined;
                 return false;

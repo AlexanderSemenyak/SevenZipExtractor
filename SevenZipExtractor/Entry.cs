@@ -96,7 +96,7 @@ namespace SevenZipExtractor
 
             string directoryName = Path.GetDirectoryName(fileName);
 
-            if (!string.IsNullOrWhiteSpace(directoryName))
+            if (!string.IsNullOrEmpty(directoryName))
             {
                 Directory.CreateDirectory(directoryName);
             }
